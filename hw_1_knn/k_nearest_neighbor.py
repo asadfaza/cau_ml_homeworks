@@ -75,7 +75,7 @@ class KNearestNeighbor:
                 # not use a loop over dimension, nor use np.linalg.norm().          #
                 #####################################################################
                 # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-                dists[i] = np.sqrt(np.sum((X[i] - self.X_train)**2, axis=1))
+                dists[i, j] = np.sqrt(np.sum((X[i] - self.X_train[j])**2))
                 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
@@ -127,9 +127,7 @@ class KNearestNeighbor:
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         sum_train = np.sum(self.X_train**2, axis=1)
         sum_test = np.sum(X**2, axis=1)
-        dot_product = np.dot(X, self.X_train.T)
-        dists_squared = sum_test[:, np.newaxis] - 2 * dot_product + sum_train
-        dists = np.sqrt(dists_squared)
+        dists = np.sqrt(sum_test[:, np.newaxis] - 2 * np.dot(X, self.X_train.T) + sum_train)
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
@@ -169,8 +167,7 @@ class KNearestNeighbor:
             # label.                                                                #
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-            label_counts = np.bincount(self.y_train[closest_y])
-            most_common_label = np.argmax(label_counts)
+            most_common_label = np.argmax(np.bincount(self.y_train[closest_y]))
             y_pred[i] = most_common_label
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
